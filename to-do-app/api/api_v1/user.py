@@ -7,11 +7,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.models import db_helper
 from core.models.user import User
 from core.schemas.user import UserRead, UserCreate
+from typing import List
 
 router = APIRouter(tags=["Users"])
 
 
-@router.get("", response_model=list[UserRead])
+@router.get("", response_model=List[UserRead])
 async def get_users(
         session: AsyncSession = Depends(db_helper.session_getter)
 ):
