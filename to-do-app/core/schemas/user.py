@@ -3,8 +3,6 @@ from pydantic import BaseModel
 
 class UserBase(BaseModel):
     username: str
-    foo: int
-    bar: int
 
 
 class UserCreate(UserBase):
@@ -12,4 +10,8 @@ class UserCreate(UserBase):
 
 
 class UserRead(UserBase):
-    id: int
+    user_id: int
+
+
+class UserDelete(BaseModel):
+    user_id: int

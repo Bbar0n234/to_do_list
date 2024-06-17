@@ -7,8 +7,6 @@ from core.config import settings
 
 
 class Base(DeclarativeBase):
-    id: Mapped[int] = mapped_column(primary_key=True)
-
     metadata = MetaData(
         naming_convention=settings.db.naming_convention
     )
