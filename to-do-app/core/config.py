@@ -11,6 +11,7 @@ class RunConfig(BaseModel):
 class ApiV1RouterConfig(BaseModel):
     prefix: str = "/v1"
     users: str = "/users"
+    tasks: str = "/tasks"
 
 
 class ApiRouterConfig(BaseModel):
