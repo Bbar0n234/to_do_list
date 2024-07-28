@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script>
+    // Функция для обработки формы и перенаправления на соответствующую страницу пользователя
+    function goToUserPage(event) {
+        event.preventDefault();  // Предотвращаем отправку формы
+        const userId = document.getElementById("userIdInput").value;
+        if (userId) {
+            window.location.href = `/api/pages/admin/tasks/${userId}`;
+        } else {
+            alert("Please enter a valid user ID.");
+        }
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="bg-white p-4 rounded shadow-md">
+    <h2 class="text-2xl font-semibold mb-4">Task Management</h2>
+
+    <!-- Форма для ввода ID пользователя -->
+    <form onsubmit="goToUserPage(event)" class="mb-4">
+        <label for="userIdInput" class="block text-lg font-medium text-gray-700">Enter User ID</label>
+        <input type="text" id="userIdInput" name="userId" placeholder="Enter user ID" class="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button type="submit" class="mt-2 bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
+            Go to User Tasks
+        </button>
+    </form>
+</div>
+{% endblock %}

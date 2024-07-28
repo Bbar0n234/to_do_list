@@ -11,17 +11,17 @@
         event.preventDefault();
         const username = document.getElementById("username").value;
         try {
-            const response = await fetch('/api/v1/users', {
+            await fetch('/api/v1/users', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ username })
             });
+            redirectToUsersPage();
         } catch (error) {
             console.error("Error creating user:", error);
         }
-        redirectToUsersPage()
     }
 
     // Функция для отправки запроса на удаление пользователя
@@ -45,7 +45,6 @@
         } catch (error) {
             console.error("Error deleting user:", error);
         }
-
     }
 
     // Функция для удаления пользователя (обработчик события)
@@ -55,6 +54,10 @@
         await sendDeleteUserRequest(userId);
     }
 
+    // Функция для перехода на страницу задач пользователя
+    function redirectToTasksPage(userId) {
+        window.location.href = `/api/pages/admin/tasks/${userId}`;
+    }
 </script>
 {% endblock %}
 
@@ -63,11 +66,11 @@
     <h2 class="text-2xl font-semibold mb-4">Manage Users</h2>
 
     <!-- Кнопка загрузки всех пользователей -->
-    <div class="mb-4">
+    <!-- <div class="mb-4">
         <button onclick="redirectToUsersPage()" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
             Load all Users
         </button>
-    </div>
+    </div> -->
 
     <!-- Форма создания пользователя -->
     <div class="mb-4">
@@ -81,7 +84,7 @@
     </div>
 
     <!-- Форма удаления пользователя -->
-    <div>
+    <!-- <div>
         <form onsubmit="deleteUser(event)">
             <label for="userId" class="block text-lg font-medium text-gray-700">Delete User</label>
             <input type="text" id="userId" name="userId" placeholder="Enter user ID" class="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -89,7 +92,7 @@
                 Delete
             </button>
         </form>
-    </div>
+    </div> -->
 
     <div id="users-list" class="mt-4">
         {% for user in users %}
@@ -98,9 +101,14 @@
                 <h3 class="text-xl font-bold">{{ user.username }}</h3>
                 <p>Id: {{ user.user_id }}</p>
             </div>
-            <button onclick="sendDeleteUserRequest({{ user.user_id }})" class="bg-red-600 text-white p-2 rounded hover:bg-red-700">
-                Delete
-            </button>
+            <div class="flex space-x-2">
+                <button onclick="sendDeleteUserRequest({{ user.user_id }})" class="bg-red-600 text-white p-2 rounded hover:bg-red-700">
+                    Delete
+                </button>
+                <button onclick="redirectToTasksPage({{ user.user_id }})" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
+                    Tasks
+                </button>
+            </div>
         </div>
         {% endfor %}
     </div>    

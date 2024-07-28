@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script>
+    // Получить user_id из URL
+    function getUserIdFromURL() {
+        const url = window.location.pathname;
+        const segments = url.split('/');
+        return segments[segments.length - 1];
+    }
+
+    // Функция для установки user_id в заголовок
+    function setUserIdInTitle() {
+        const userId = getUserIdFromURL();
+        const titleElement = document.getElementById("user-tasks-title");
+        if (titleElement) {
+            titleElement.textContent = `User ${userId} Tasks`;
+        }
+    }
+
+    // Функция для удаления задачи
+    async function deleteTask(taskId) {
+        const userId = getUserIdFromURL();
+        try {
+            const response = await fetch('/api/v1/tasks', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user_id: userId, task_id: taskId })
+            });
+            if (response.ok) {
+                console.log("Task deleted successfully");
+                window.location.reload();
+            } 
+        } catch (error) {
+            console.error("Error deleting task:", error);
+        }
+    }
+
+    // Функция для создания задачи
+    async function createTask(event) {
+        event.preventDefault();
+        const userId = getUserIdFromURL();
+        const taskDescription = document.getElementById("taskDescription").value;
+        try {
+            const response = await fetch('/api/v1/tasks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user_id: userId, description: taskDescription })
+            });
+            if (response.ok) {
+                console.log("Task created successfully");
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error("Error creating task:", error);
+        }
+    }
+
+    // Установить заголовок при загрузке страницы
+    document.addEventListener('DOMContentLoaded', setUserIdInTitle);
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="bg-white p-4 rounded shadow-md">
+    <h2 id="user-tasks-title" class="text-2xl font-semibold mb-4"></h2>
+
+    <!-- Форма создания задачи -->
+    <div class="mb-4">
+        <form onsubmit="createTask(event)">
+            <label for="taskDescription" class="block text-lg font-medium text-gray-700">Create Task</label>
+            <input type="text" id="taskDescription" name="taskDescription" placeholder="Enter task description" class="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button type="submit" class="mt-2 bg-green-600 text-white p-2 rounded hover:bg-green-700">
+                Create
+            </button>
+        </form>
+    </div>
+
+    <!-- Список задач пользователя -->
+    <div id="tasks-list" class="mt-4">
+        {% for task in tasks %}
+        <div class="bg-gray-100 p-4 rounded border border-gray-300 mb-4 flex justify-between items-center">
+            <div>
+                <h3 class="text-xl font-bold">{{ task.description }}</h3>
+                <p>Task Id: {{ task.task_id }}</p>
+            </div>
+            <button onclick="deleteTask({{ task.task_id }})" class="bg-red-600 text-white p-2 rounded hover:bg-red-700">
+                Delete
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
