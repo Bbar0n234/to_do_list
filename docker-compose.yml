@@ -1,20 +1,17 @@
 services:
-
   pg:
+    container_name: pg_db
     image: postgres
     environment:
       POSTGRES_DB: todo
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Cnfccnfc228
     ports:
-      - "5433:5432"
+      - "5438:5432"
 
-  adminer:
-    image: adminer
-    ports:
-      - "8080:8080"
 
   pgadmin:
+    container_name: pg_admin
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.org
@@ -22,3 +19,13 @@ services:
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
       - "5050:80"
+
+  fastapi:
+    build: .
+    container_name: fastapi_app
+    command: ["/app/app.sh"]
+    ports:
+      - "8008:8008"
+    depends_on:
+      - pg
+      - pgadmin

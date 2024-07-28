@@ -4,6 +4,8 @@ import uvicorn
 from fastapi import FastAPI
 
 from api import router as api_router
+from pages.router import router as pages_router
+
 from core.config import settings
 from core.models import db_helper
 
@@ -21,6 +23,11 @@ main_app = FastAPI(
 
 main_app.include_router(
     api_router,
+    prefix=settings.api.prefix
+)
+
+main_app.include_router(
+    pages_router,
     prefix=settings.api.prefix
 )
 

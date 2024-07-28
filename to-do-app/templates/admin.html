@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script>
+    // Функция для обработки нажатия на кнопку и перенаправления к списку всех пользователей
+    const loadAllUsers = () => {
+        window.location.href = '/api/pages/admin/all_users';
+    }
+</script>
+{% endblock %}
+
+{% block search_bar %}
+<div class="mb-4 flex justify-end">
+    <button onclick="loadAllUsers()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        Load All Users
+    </button>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-4">
+    {% for user in users %}
+    <div class="bg-gray-100 p-4 rounded border border-gray-300">
+        <h3 class="text-xl font-bold">{{ user.username }}</h3>
+        <p>Id: {{ user.user_id }}</p>
+        <!-- Дополнительная информация о пользователе может быть добавлена здесь -->
+    </div>
+    {% endfor %}
+    
+</div>
+{% endblock %}
