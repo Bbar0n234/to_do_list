@@ -12,9 +12,8 @@ templates = Jinja2Templates(directory="templates")
 
 @router.get("/admin")
 def get_admin_page(request: Request):
-    return templates.TemplateResponse("admin.html", {"request": request})
+    return templates.TemplateResponse("base.html", {"request": request})
 
-
-@router.get("/admin/all_users")
+@router.get("/admin/users")
 def get_admin_page_users(request: Request, users=Depends(get_users)):
-    return templates.TemplateResponse("admin.html", {"request": request, "users": users})
+    return templates.TemplateResponse("users.html", {"request": request, "users": users})

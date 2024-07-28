@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script>
+    const redirectToUsersPage = () => {
+        window.location.href = "/api/pages/admin/users";
+    }
+
+    // Функция для создания пользователя
+    async function createUser(event) {
+        event.preventDefault();
+        const username = document.getElementById("username").value;
+        try {
+            const response = await fetch('/api/v1/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username })
+            });
+        } catch (error) {
+            console.error("Error creating user:", error);
+        }
+        redirectToUsersPage()
+    }
+
+    // Функция для отправки запроса на удаление пользователя
+    async function sendDeleteUserRequest(userId) {
+        try {
+            const response = await fetch(`/api/v1/users`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user_id: userId }),
+            });
+
+            if (response.ok) {
+                console.log("User deleted successfully");
+            } else {
+                console.error("Error deleting user");
+            }
+
+            redirectToUsersPage();
+        } catch (error) {
+            console.error("Error deleting user:", error);
+        }
+
+    }
+
+    // Функция для удаления пользователя (обработчик события)
+    async function deleteUser(event) {
+        event.preventDefault();
+        const userId = document.getElementById("userId").value;
+        await sendDeleteUserRequest(userId);
+    }
+
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="bg-white p-4 rounded shadow-md">
+    <h2 class="text-2xl font-semibold mb-4">Manage Users</h2>
+
+    <!-- Кнопка загрузки всех пользователей -->
+    <div class="mb-4">
+        <button onclick="redirectToUsersPage()" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
+            Load all Users
+        </button>
+    </div>
+
+    <!-- Форма создания пользователя -->
+    <div class="mb-4">
+        <form onsubmit="createUser(event)">
+            <label for="username" class="block text-lg font-medium text-gray-700">Create User</label>
+            <input type="text" id="username" name="username" placeholder="Enter username" class="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button type="submit" class="mt-2 bg-green-600 text-white p-2 rounded hover:bg-green-700">
+                Create
+            </button>
+        </form>
+    </div>
+
+    <!-- Форма удаления пользователя -->
+    <div>
+        <form onsubmit="deleteUser(event)">
+            <label for="userId" class="block text-lg font-medium text-gray-700">Delete User</label>
+            <input type="text" id="userId" name="userId" placeholder="Enter user ID" class="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button type="submit" class="mt-2 bg-red-600 text-white p-2 rounded hover:bg-red-700">
+                Delete
+            </button>
+        </form>
+    </div>
+
+    <div id="users-list" class="mt-4">
+        {% for user in users %}
+        <div class="bg-gray-100 p-4 rounded border border-gray-300 mb-4 flex justify-between items-center">
+            <div>
+                <h3 class="text-xl font-bold">{{ user.username }}</h3>
+                <p>Id: {{ user.user_id }}</p>
+            </div>
+            <button onclick="sendDeleteUserRequest({{ user.user_id }})" class="bg-red-600 text-white p-2 rounded hover:bg-red-700">
+                Delete
+            </button>
+        </div>
+        {% endfor %}
+    </div>    
+</div>
+{% endblock %}
