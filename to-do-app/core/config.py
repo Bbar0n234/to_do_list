@@ -36,11 +36,12 @@ class DataBaseConfig(BaseModel):
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file="../.env",
 
         env_prefix="APP_CONFIG__",
         case_sensitive=False,
         env_nested_delimiter='__',
+        extra="ignore"
 
     )
     run: RunConfig = RunConfig()

@@ -2,10 +2,6 @@
 
 {% block head %}
 <script>
-    const redirectToUsersPage = () => {
-        window.location.href = "/api/pages/admin/users";
-    }
-
     // Функция для создания пользователя
     async function createUser(event) {
         event.preventDefault();
@@ -18,7 +14,7 @@
                 },
                 body: JSON.stringify({ username })
             });
-            redirectToUsersPage();
+            window.location.reload();
         } catch (error) {
             console.error("Error creating user:", error);
         }
@@ -41,7 +37,7 @@
                 console.error("Error deleting user");
             }
 
-            redirectToUsersPage();
+            window.location.reload();
         } catch (error) {
             console.error("Error deleting user:", error);
         }
@@ -65,13 +61,6 @@
 <div class="bg-white p-4 rounded shadow-md">
     <h2 class="text-2xl font-semibold mb-4">Manage Users</h2>
 
-    <!-- Кнопка загрузки всех пользователей -->
-    <!-- <div class="mb-4">
-        <button onclick="redirectToUsersPage()" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
-            Load all Users
-        </button>
-    </div> -->
-
     <!-- Форма создания пользователя -->
     <div class="mb-4">
         <form onsubmit="createUser(event)">
@@ -82,17 +71,6 @@
             </button>
         </form>
     </div>
-
-    <!-- Форма удаления пользователя -->
-    <!-- <div>
-        <form onsubmit="deleteUser(event)">
-            <label for="userId" class="block text-lg font-medium text-gray-700">Delete User</label>
-            <input type="text" id="userId" name="userId" placeholder="Enter user ID" class="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <button type="submit" class="mt-2 bg-red-600 text-white p-2 rounded hover:bg-red-700">
-                Delete
-            </button>
-        </form>
-    </div> -->
 
     <div id="users-list" class="mt-4">
         {% for user in users %}
